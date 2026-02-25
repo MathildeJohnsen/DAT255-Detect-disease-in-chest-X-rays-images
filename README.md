@@ -18,25 +18,37 @@ Evaluere modellene ved hjelp av relevante metrikker for medisinsk klassifisering
 ### 📂 Datasett
 
 Vi benytter CheXpert-datasettet fra Stanford ML Group:
+
 https://stanfordmlgroup.github.io/competitions/chexpert/
 
 Datasettet inneholder 224 316 røntgenbilder vurdert for 14 ulike medisinske tilstander. Hver tilstand er annotert som:
+
 Positiv (1)
+
 Negativ (0)
+
 Usikker (-1)
+
 Datasettet er ikke inkludert i dette repositoriet grunnet størrelse og lisenskrav.
 
 ### 🧠 Modellarkitektur
 
 Følgende modeller inngår i prosjektet:
+
 Egendefinert CNN (trent fra bunnen av)
+
 ResNet (transfer learning)
+
 DenseNet
+
 Vision Transformer (valgfritt)
+
 Modellene implementeres og trenes ved bruk av PyTorch eller TensorFlow.
 
 ### 👥 Gruppemedlemmer
 
 Torstein Sleire
+
 Mathilde Røssland Johnsen
+
 Astrid Rødland
