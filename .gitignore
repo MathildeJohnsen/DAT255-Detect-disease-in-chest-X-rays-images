@@ -1,3 +1,15 @@
 data/
 models/artifacts/
 .DS_Store
+# Data
+data/
+
+# Python
+__pycache__/
+*.pyc
+
+# Modell
+*.pth
+
+# Mac
+.DS_Store
