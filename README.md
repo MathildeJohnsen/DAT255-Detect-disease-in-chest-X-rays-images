@@ -55,6 +55,6 @@ Følgende modeller inngår i prosjektet:
 
 ## 👥 Gruppemedlemmer
 
-- Torstein Sleire  
+- Torstein Hosøy Sleire  
 - Mathilde Røssland Johnsen  
 - Astrid Rødland  
