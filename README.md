@@ -26,13 +26,12 @@ MEN bruker datasettet som tar mindre plass fra Kaggle:
 https://www.kaggle.com/datasets/ashery/chexpert
 
 Datasettet inneholder:
-=======
+
 Datasettet inneholder 224 316 røntgenbilder vurdert for 14 ulike medisinske tilstander. Hver tilstand er annotert som:
 Positiv (1)
 Negativ (0)
 Usikker (-1)
 Datasettet er ikke inkludert i dette repositoriet grunnet størrelse og lisenskrav.
->>>>>>> 6e4f3be (Added working training pipeline with SimpleCNN and CheXpert dataset)
 
 🧠 Modellarkitektur
 
@@ -43,7 +42,7 @@ DenseNet
 Vision Transformer (valgfritt)
 Modellene implementeres og trenes ved bruk av PyTorch eller TensorFlow.
 
-<<<<<<< HEAD
+
 - Egendefinert CNN (trent fra bunnen av)
 - ResNet (transfer learning)
 - DenseNet
@@ -55,9 +54,9 @@ Modellene implementeres og trenes ved bruk av PyTorch eller TensorFlow.
 - Torstein Hosøy Sleire  
 - Mathilde Røssland Johnsen  
 - Astrid Rødland  
-=======
+
 👥 Gruppemedlemmert
 Torstein Sleire
 Mathilde Røssland Johnsen
 Astrid Rødland
->>>>>>> 6e4f3be (Added working training pipeline with SimpleCNN and CheXpert dataset)
+
