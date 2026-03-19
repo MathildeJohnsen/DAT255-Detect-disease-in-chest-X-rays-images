@@ -33,7 +33,7 @@ def main():
     print(f"Fullt dataset lastet. Antall eksempler: {len(dataset)}")
 
     # Bruk bare et lite subset for testing/debugging
-    dataset = Subset(dataset, range(50))
+    dataset = Subset(dataset, range(5000))
     print(f"Subset valgt. Antall eksempler: {len(dataset)}")
 
     print("Lager dataloader...")
