@@ -27,6 +27,10 @@ Vi benytter **CheXpert-datasettet** fra Stanford ML Group:
 
 https://stanfordmlgroup.github.io/competitions/chexpert/
 
+MEN bruker datasettet som tar mindre plass fra Kaggle:
+
+https://www.kaggle.com/datasets/ashery/chexpert
+
 Datasettet inneholder:
 
 - 224 316 røntgenbilder  
