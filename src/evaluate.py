@@ -15,9 +15,11 @@ from sklearn.metrics import roc_auc_score
 from src.data.chexpert_dataset import CheXpertDataset
 from src.models.simple_cnn import SimpleCNN
 from src.models.resnet_model import ResNet18Model
+from src.models.vit_model import ViTModel
 from src.utils.constants import NUM_CLASSES, PATHOLOGIES
 
-MODEL_TYPE = "simple_cnn"   # "simple_cnn" eller "resnet"
+# Velg modell her:
+MODEL_TYPE = "vit"   # "simple_cnn", "resnet" eller "vit"
 
 
 def evaluate(model, loader, criterion, device):
@@ -70,7 +72,7 @@ def evaluate(model, loader, criterion, device):
         y_true = all_labels[valid_idx, i]
         y_score = all_probs[valid_idx, i]
 
-        if len(np.unique(y_true)) < 2:
+        if len(y_true) == 0 or len(np.unique(y_true)) < 2:
             auc_scores[i] = None
         else:
             auc_scores[i] = roc_auc_score(y_true, y_score)
@@ -83,15 +85,19 @@ def evaluate(model, loader, criterion, device):
 
 def get_model_and_weights(device):
     if MODEL_TYPE == "simple_cnn":
-        model = SimpleCNN(num_classes=NUM_CLASSES).to(device)
+        model = SimpleCNN().to(device)
         weights_path = "best_simple_cnn.pth"
 
     elif MODEL_TYPE == "resnet":
-        model = ResNet18Model(num_classes=NUM_CLASSES).to(device)
+        model = ResNet18Model().to(device)
         weights_path = "best_resnet.pth"
 
+    elif MODEL_TYPE == "vit":
+        model = ViTModel().to(device)
+        weights_path = "best_vit.pth"
+
     else:
-        raise ValueError("Ugyldig MODEL_TYPE. Bruk 'simple_cnn' eller 'resnet'.")
+        raise ValueError("Ugyldig MODEL_TYPE. Bruk 'simple_cnn', 'resnet' eller 'vit'.")
 
     model.load_state_dict(torch.load(weights_path, map_location=device))
     print(f"Modell lastet fra {weights_path}")
@@ -103,12 +109,18 @@ def main():
     print(f"Using device: {device}")
     print(f"Evaluerer modelltype: {MODEL_TYPE}")
 
+    # VIKTIG: samme transform som i train.py
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
+        transforms.Grayscale(num_output_channels=3),
         transforms.ToTensor(),
+        transforms.Normalize(
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]
+        )
     ])
 
-    print("Starter å laste offisielt validation-dataset...")
+    print("Starter å laste validation-dataset...")
     val_dataset = CheXpertDataset(
         csv_path="data/chexpert/valid.csv",
         data_root="data/chexpert",
