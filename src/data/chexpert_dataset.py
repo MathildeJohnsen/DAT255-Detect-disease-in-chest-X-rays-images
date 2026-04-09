@@ -62,3 +62,4 @@ class CheXpertDataset(Dataset):
         mask = torch.tensor(mask, dtype=torch.float32)
 
         return image, labels, mask
+

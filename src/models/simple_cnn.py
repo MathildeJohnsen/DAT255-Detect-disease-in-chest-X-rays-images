@@ -4,32 +4,33 @@ from src.utils.constants import NUM_CLASSES
 
 
 class SimpleCNN(nn.Module):
-    def __init__(self, num_classes=NUM_CLASSES):
+    def __init__(self, num_classes=NUM_CLASSES, channels=(16, 32, 64), dropout=0.3):
         super().__init__()
 
-        self.features = nn.Sequential(
-            nn.Conv2d(3, 16, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(2),  # 224 -> 112
+        layers = []
+        in_channels = 3
 
-            nn.Conv2d(16, 32, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(2),  # 112 -> 56
+        for out_channels in channels:
+            layers.append(nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1))
+            layers.append(nn.ReLU())
+            layers.append(nn.MaxPool2d(2))
+            in_channels = out_channels
 
-            nn.Conv2d(32, 64, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(2)   # 56 -> 28
-        )
+        self.features = nn.Sequential(*layers)
+
+        # Gjør output-størrelsen fast uansett hvor mange conv-lag du bruker
+        self.pool = nn.AdaptiveAvgPool2d((1, 1))
 
         self.classifier = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(64 * 28 * 28, 128),
+            nn.Linear(in_channels, 128),
             nn.ReLU(),
-            nn.Dropout(0.3),
+            nn.Dropout(dropout),
             nn.Linear(128, num_classes)
         )
 
     def forward(self, x):
         x = self.features(x)
+        x = self.pool(x)
         x = self.classifier(x)
         return x
