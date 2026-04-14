@@ -20,7 +20,16 @@ from src.utils.constants import NUM_CLASSES, PATHOLOGIES
 
 
 # Velg modell:
-MODEL_TYPE = "vit"   # "simple_cnn", "resnet" eller "vit"
+MODEL_TYPE = "simple_cnn"   # "simple_cnn", "resnet" eller "vit"
+
+# Brukes bare hvis MODEL_TYPE == "simple_cnn"
+SIMPLE_CNN_VARIANT = "large"   # "small", "medium", "large"
+
+SIMPLE_CNN_CONFIGS = {
+    "small": (16, 32),
+    "medium": (16, 32, 64),
+    "large": (32, 64, 128, 256)
+}
 
 
 def train_one_epoch(model, loader, criterion, optimizer, device):
@@ -167,13 +176,14 @@ def main():
 
     # Modellvalg
     if MODEL_TYPE == "simple_cnn":
-        print("Kjører SimpleCNN")
-        model = SimpleCNN().to(device)
+        channels = SIMPLE_CNN_CONFIGS[SIMPLE_CNN_VARIANT]
+        print(f"Kjører SimpleCNN ({SIMPLE_CNN_VARIANT}) med channels={channels}")
+        model = SimpleCNN(num_classes=NUM_CLASSES, channels=channels).to(device)
         learning_rate = 1e-3
 
     elif MODEL_TYPE == "resnet":
         print("Kjører ResNet18")
-        model = ResNet18Model().to(device)
+        model = ResNet18Model(NUM_CLASSES).to(device)
         learning_rate = 1e-4
 
     elif MODEL_TYPE == "vit":
@@ -203,12 +213,23 @@ def main():
         # Lagrer beste modell
         if val_auc > best_auc:
             best_auc = val_auc
-            torch.save(model.state_dict(), f"best_{MODEL_TYPE}.pth")
-            print(f"Beste modell lagret som best_{MODEL_TYPE}.pth")
+
+            if MODEL_TYPE == "simple_cnn":
+                best_model_path = f"best_simple_cnn_{SIMPLE_CNN_VARIANT}.pth"
+            else:
+                best_model_path = f"best_{MODEL_TYPE}.pth"
+
+            torch.save(model.state_dict(), best_model_path)
+            print(f"Beste modell lagret som {best_model_path}")
 
     # Lagrer siste modell også
-    torch.save(model.state_dict(), f"{MODEL_TYPE}.pth")
-    print(f"\nSiste modell lagret som {MODEL_TYPE}.pth")
+    if MODEL_TYPE == "simple_cnn":
+        last_model_path = f"last_simple_cnn_{SIMPLE_CNN_VARIANT}.pth"
+    else:
+        last_model_path = f"last_{MODEL_TYPE}.pth"
+
+    torch.save(model.state_dict(), last_model_path)
+    print(f"\nSiste modell lagret som {last_model_path}")
 
 
 if __name__ == "__main__":

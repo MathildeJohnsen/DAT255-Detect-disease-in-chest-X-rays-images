@@ -24,8 +24,8 @@ transform = transforms.Compose([
 def load_models():
     print("Laster modeller...")
 
-    simple_model = SimpleCNN(num_classes=NUM_CLASSES)
-    simple_model.load_state_dict(torch.load("best_simple_cnn.pth", map_location=DEVICE))
+    simple_model = SimpleCNN(channels=(16, 32, 64)).to(device)
+    simple_model.load_state_dict(torch.load("best_simple_cnn_medium.pth", map_location=device))
     simple_model.to(DEVICE)
     simple_model.eval()
 
@@ -70,7 +70,7 @@ def compare_models(image):
     simple_results = predict(simple_model, image)
     resnet_results = predict(resnet_model, image)
 
-    # 🔥 Liten forbedring: skjul "No Finding" hvis andre er høye
+    # skjul "No Finding" hvis andre er høye
     def filter_results(results):
         filtered = {}
         for k, v in results.items():

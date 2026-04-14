@@ -19,7 +19,16 @@ from src.models.vit_model import ViTModel
 from src.utils.constants import NUM_CLASSES, PATHOLOGIES
 
 # Velg modell her:
-MODEL_TYPE = "vit"   # "simple_cnn", "resnet" eller "vit"
+MODEL_TYPE = "resnet"   # "simple_cnn", "resnet" eller "vit"
+
+# Brukes bare hvis MODEL_TYPE == "simple_cnn"
+SIMPLE_CNN_VARIANT = "large"   # "small", "medium", "large"
+
+SIMPLE_CNN_CONFIGS = {
+    "small": (16, 32),
+    "medium": (16, 32, 64),
+    "large": (32, 64, 128, 256)
+}
 
 
 def evaluate(model, loader, criterion, device):
@@ -85,11 +94,12 @@ def evaluate(model, loader, criterion, device):
 
 def get_model_and_weights(device):
     if MODEL_TYPE == "simple_cnn":
-        model = SimpleCNN().to(device)
-        weights_path = "best_simple_cnn.pth"
+        channels = SIMPLE_CNN_CONFIGS[SIMPLE_CNN_VARIANT]
+        model = SimpleCNN(num_classes=NUM_CLASSES, channels=channels).to(device)
+        weights_path = f"best_simple_cnn_{SIMPLE_CNN_VARIANT}.pth"
 
     elif MODEL_TYPE == "resnet":
-        model = ResNet18Model().to(device)
+        model = ResNet18Model(NUM_CLASSES).to(device)
         weights_path = "best_resnet.pth"
 
     elif MODEL_TYPE == "vit":
