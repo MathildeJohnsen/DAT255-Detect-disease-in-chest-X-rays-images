@@ -20,7 +20,6 @@ Evaluere modellene ved hjelp av relevante metrikker for medisinsk klassifisering
 Vi benytter CheXpert-datasettet fra Stanford ML Group:
 https://stanfordmlgroup.github.io/competitions/chexpert/
 
-<<<<<<< HEAD
 MEN bruker datasettet som tar mindre plass fra Kaggle:
 
 https://www.kaggle.com/datasets/ashery/chexpert
@@ -55,8 +54,4 @@ Modellene implementeres og trenes ved bruk av PyTorch eller TensorFlow.
 - Mathilde Røssland Johnsen  
 - Astrid Rødland  
 
-👥 Gruppemedlemmert
-Torstein Sleire
-Mathilde Røssland Johnsen
-Astrid Rødland
 
