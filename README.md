@@ -11,7 +11,7 @@ Prosjektet er gjennomført som en del av emnet DAT255 – Deep Learning.
 🎯 Målsetting
 
 Utvikle og trene en konvolusjonsnevralt nettverksmodell (CNN) fra bunnen av (tilfeldig initialiserte vekter).
-Sammenligne ytelsen med mer avanserte arkitekturer som ResNet og DenseNet, samt eventuelt en Vision Transformer.
+Sammenligne ytelsen med mer avanserte arkitekturer som ResNet og en Vision Transformer.
 Analysere hvordan modellarkitektur påvirker klassifiseringsytelse i medisinsk bildeanalyse.
 Evaluere modellene ved hjelp av relevante metrikker for medisinsk klassifisering.
 
@@ -30,22 +30,15 @@ Datasettet inneholder 224 316 røntgenbilder vurdert for 14 ulike medisinske til
 Positiv (1)
 Negativ (0)
 Usikker (-1)
-Datasettet er ikke inkludert i dette repositoriet grunnet størrelse og lisenskrav.
 
 🧠 Modellarkitektur
 
 Følgende modeller inngår i prosjektet:
 Egendefinert CNN (trent fra bunnen av)
-ResNet (transfer learning)
-DenseNet
-Vision Transformer (valgfritt)
+ResNet 
+Vision Transformer
 Modellene implementeres og trenes ved bruk av PyTorch eller TensorFlow.
 
-
-- Egendefinert CNN (trent fra bunnen av)
-- ResNet (transfer learning)
-- DenseNet
-- Vision Transformer
 
 
 ## 👥 Gruppemedlemmer
