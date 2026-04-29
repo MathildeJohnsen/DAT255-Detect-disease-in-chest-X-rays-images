@@ -15,12 +15,11 @@ from src.utils.constants import PATHOLOGIES
 from src.utils.gradcam import GradCAM, get_last_conv_layer, overlay_heatmap
 
 
-# =========================
-# KONFIGURASJON
+# Instillinger for modellvalg
 # =========================
 
-MODEL_TYPE = "simple_cnn"   # "simple_cnn", "resnet", "vit"
-SIMPLE_CNN_VARIANT = "medium"   # "small", "medium", "large"
+MODEL_TYPE = "simple_cnn"   # "simple_cnn", "resnet", "vit" // Velg hvilken modell som skal lastes inn
+SIMPLE_CNN_VARIANT = "medium"   # "small", "medium", "large" // Brukes bare dersom MODEL_TYPE er simple_cnn
 
 SIMPLE_CNN_CONFIGS = {
     "small": (16, 32),
@@ -39,18 +38,18 @@ else:
 
 CSV_PATH = "data/chexpert/valid.csv"
 
-# Sett til True hvis du vil vise heatmap for SimpleCNN
+# Brukes for å vise heatmap for SimpleCNN. Hvis ikke, sett til False.
 USE_HEATMAP = True
 
 
-# =========================
-# HJELPEFUNKSJONER
+# Hjelpefunksjoner
 # =========================
 
+# Velger GPU dersom det er tilgjengelig, hvis ikke bruker den CPU
 def get_device():
     return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
+# Fjerner noen av kantene rundt bildet, slik at modellen kan fokusere mer på brystområdet
 def custom_crop(img):
     width, height = img.size
 
@@ -95,7 +94,7 @@ def load_model(model_type, model_path, device, simple_cnn_variant="small"):
 
     return model
 
-
+# Velger et tilfeldig bilde fra valid.csv
 def get_random_image_path(csv_path):
     df = pd.read_csv(csv_path)
 
@@ -118,16 +117,16 @@ def load_image(image):
 
     return pil_image
 
-
+# Returnerer de klassene som modellen gir høyest sannsynlighet
 def get_top_predictions(results, top_k=5):
     return sorted(results.items(), key=lambda x: x[1], reverse=True)[:top_k]
 
-
+# No Findings fjernes for å gjøre de andre sykdomsklassene mer tydelig i resultatet
 def get_top_predictions_without_no_finding(results, top_k=5):
     filtered_results = {k: v for k, v in results.items() if k != "No Finding"}
     return sorted(filtered_results.items(), key=lambda x: x[1], reverse=True)[:top_k]
 
-
+# Kjører prediksjon på et bilde og returnerer sannsynlighet for hver klasse.
 def predict_image(model, image, device):
     transform = get_transform()
     pil_image = load_image(image)
@@ -151,7 +150,7 @@ def predict_image_with_heatmap(model, image, device):
     transform = get_transform()
     pil_image = load_image(image)
 
-    # originalbilde for visning
+    # originalbilde for visning, slik at heatmap vises oppå det
     original_image = np.array(pil_image)
 
     image_tensor = transform(pil_image).unsqueeze(0).to(device)
@@ -201,14 +200,14 @@ def show_heatmap(original_image, heatmap_overlay, target_pathology):
     plt.show()
 
 
-# =========================
-# MAIN
+# Main
 # =========================
 
 def main():
     device = get_device()
     print(f"Using device: {device}")
 
+# laster inn modellen som er valgt over / i starten
     if MODEL_TYPE == "simple_cnn":
         print(f"Modell: SimpleCNN ({SIMPLE_CNN_VARIANT}) | Fil: {MODEL_PATH}")
     elif MODEL_TYPE == "resnet":
@@ -222,7 +221,7 @@ def main():
         device=device,
         simple_cnn_variant=SIMPLE_CNN_VARIANT
     )
-
+# velger et tilfeldig bilde fra valid.csv
     image_path = get_random_image_path(CSV_PATH)
 
     print(f"\nBruker bilde: {image_path}")
@@ -231,7 +230,7 @@ def main():
     if not os.path.exists(image_path):
         print("\nFEIL: Bildet finnes ikke. Sjekk path-fix i koden.")
         return
-
+# GradCam brukes kun når simpleCNN er valgt som modell
     if MODEL_TYPE == "simple_cnn" and USE_HEATMAP:
         results, original_image, heatmap_overlay, target_pathology = predict_image_with_heatmap(
             model, image_path, device
@@ -258,6 +257,7 @@ def main():
         print(f"\nHeatmap laget for: {target_pathology}")
         show_heatmap(original_image, heatmap_overlay, target_pathology)
 
+# lagrer heatmap med tidsstempel, slik at man ikke overskriver tidligere heatmap-bilder
         filename = f"gradcam_{target_pathology}_{int(time.time())}.png"
         heatmap_pil = Image.fromarray(heatmap_overlay)
         heatmap_pil.save(filename)

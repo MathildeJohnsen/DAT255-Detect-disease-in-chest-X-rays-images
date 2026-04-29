@@ -1,9 +1,8 @@
-# denne skal:
+# train.py skal:
 # laste train-datasett
-# trene modellen
-# skrive ut training loss og validation loss
-# beregne AUROC
-# lagre beste modell
+# trene valgt modell på CheXpert-datasettet
+# skrive ut loss og Mean AUROC, og lagrer så den modellen med best resultat
+
 
 import torch
 import torch.nn as nn
@@ -20,12 +19,13 @@ from src.models.vit_model import ViTModel
 from src.utils.constants import NUM_CLASSES, PATHOLOGIES
 
 
-# =========================
+
 # KONFIGURASJON
 # =========================
 
+# Velg hvilken modell som skal trenes
 MODEL_TYPE = "simple_cnn"   # "simple_cnn", "resnet", "vit"
-SIMPLE_CNN_VARIANT = "medium"   # "small", "medium", "large"
+SIMPLE_CNN_VARIANT = "medium"   # "small", "medium", "large" // bare dersom Simple_CNN er valgt som modell.
 
 SIMPLE_CNN_CONFIGS = {
     "small": (16, 32),
@@ -44,8 +44,8 @@ NUM_EPOCHS = 5
 RANDOM_SEED = 42
 
 
-# =========================
-# HJELPEFUNKSJONER
+
+# Hjelpefunksjoner
 # =========================
 
 def custom_crop(img):
@@ -231,8 +231,8 @@ def build_model(model_type, device, simple_cnn_variant="medium"):
     return model, learning_rate
 
 
-# =========================
-# MAIN
+
+# Main
 # =========================
 
 def main():
